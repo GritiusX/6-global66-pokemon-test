@@ -8,7 +8,6 @@ export const usePokemonStore = defineStore("pokemon", () => {
 	const allPokemon = ref([]);
 	const singlePokemon = ref();
 	const searchedSinglePokemon = ref(false);
-	const searchInputValue = ref("");
 
 	const favoritesPokemon = computed(() => {
 		return allPokemon.value.filter((pokemon) => pokemon.favorite === true);
@@ -33,20 +32,45 @@ export const usePokemonStore = defineStore("pokemon", () => {
 		}
 	};
 
-	const filterPokemon = (pkmnValue) => {
-		console.log("caca", pkmnValue);
+	const filterPokemon = (pokemon) => {
+		const isNumber = !isNaN(pokemon.value.toLowerCase());
+
+		console.log(
+			"filterPokemon2",
+			pokemon.value,
+			typeof pokemon.value,
+			isNumber
+		);
 		try {
-			const isNumber = !isNaN(pkmnValue.toLowerCase());
+			if (isNumber) {
+				const index = Number(pokemon.value) - 1;
+				const isValidIndex = index >= 0 && index < allPokemon.value.length;
+
+				if (isValidIndex) {
+					console.log(allPokemon.value[index]);
+					console.log(
+						"el de abajo",
+						(singlePokemon.value = allPokemon.value[index])
+					);
+					return (singlePokemon.value = allPokemon.value[index]);
+				}
+				return (hasError.value = true);
+			}
+		} catch (error) {
+			console.log("filterPokemonError", error);
+		}
+		/* 		try {
+			const isNumber = !isNaN(pkmnValue.value.toLowerCase());
 			console.log(isNumber);
 			if (isNumber) {
 				const numericValue = Number(pkmnValue);
 				if (numericValue === 0 || isNumber === null || isNumber === undefined) {
-					searchInputValue.value = "";
+					pkmnValue = "";
 					return (hasError.value = true);
 				}
 				return allPokemon.value[numericValue - 1];
 			}
-			/* 
+
 			let pokemonName = pkmnValue.toLowerCase();
 			singlePokemon.value = copiedPokemon.find(
 				(pkmn) => pkmn.name === pokemonName
@@ -57,10 +81,10 @@ export const usePokemonStore = defineStore("pokemon", () => {
 				return (hasError.value = true);
 			}
 			searchedSinglePokemon.value = true;
-			return singlePokemon.value; */
+			return singlePokemon.value;
 		} catch (error) {
 			console.error("Failed to find a pokemon:", error);
-		}
+		} */
 	};
 
 	const addPkmnToFavorites = (pkmnIndex) => {
@@ -85,15 +109,14 @@ export const usePokemonStore = defineStore("pokemon", () => {
 
 	return {
 		isLoading,
+		hasError,
 		allPokemon,
 		singlePokemon,
-		searchInputValue,
 		searchedSinglePokemon,
-		hasError,
 		favoritesPokemon,
 		getAllPokemon,
-		getUniquePkmn,
 		filterPokemon,
 		addPkmnToFavorites,
+		getUniquePkmn,
 	};
 });

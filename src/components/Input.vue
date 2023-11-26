@@ -10,7 +10,7 @@
 				class="w-full bg-transparent text-medium focus-visible:outline-none placeholder:font-medium placeholder:leading-inputPlaceholder"
 				type="text"
 				v-model="searchInputValue"
-				@keyup.enter="filterPokemon(searchInputValue)"
+				@keyup.enter="handleFilterPokemon"
 				placeholder="Search"
 			/>
 		</div>
@@ -18,17 +18,18 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { Icon } from "@iconify/vue";
 import { usePokemonStore } from "../store/store";
-import { storeToRefs } from "pinia";
+/* import { storeToRefs } from "pinia"; */
 const store = usePokemonStore();
-const { searchInputValue, searchedSinglePokemon } = storeToRefs(store);
+
 const { filterPokemon } = store;
 
-const handleBlur = () => {
-	if (searchInputValue.value === "") {
-		searchedSinglePokemon.value = false;
-	}
+const searchInputValue = ref("");
+
+const handleFilterPokemon = () => {
+	filterPokemon(searchInputValue);
 	searchInputValue.value = "";
 };
 </script>
