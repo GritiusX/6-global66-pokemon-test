@@ -1,5 +1,5 @@
 <template>
-	<PokemonList :showFavorite="true" />
+	<PokemonList />
 </template>
 
 <script setup>

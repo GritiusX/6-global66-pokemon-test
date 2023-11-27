@@ -1,29 +1,43 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+
 import axios from "axios";
 
 export const usePokemonStore = defineStore("pokemon", () => {
 	const isLoading = ref(false);
 	const hasError = ref(false);
 	const allPokemon = ref([]);
-	const singlePokemon = ref();
-	const searchedSinglePokemon = ref(false);
+	const togglePokemonModal = ref(false);
+	const pokemonDetail = ref({});
 
 	const favoritesPokemon = computed(() => {
 		return allPokemon.value.filter((pokemon) => pokemon.favorite === true);
 	});
 
+	const findPokemonById = (id) => {
+		return allPokemon.value.find((p) => p.id === id);
+	};
+
 	const getAllPokemon = async () => {
-		if (allPokemon.value.length > 0) {
-			return allPokemon.value;
-		}
 		try {
 			isLoading.value = true;
+
+			if (allPokemon.value.length > 0) {
+				return allPokemon.value;
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, 1500));
+
 			const { data } = await axios.get(
 				"https://pokeapi.co/api/v2/pokemon/?limit=1292"
 			);
-			data.results.forEach((pkmn) => (pkmn.favorite = false));
-			allPokemon.value = data.results;
+
+			allPokemon.value = data.results.map((pkmn) => ({
+				...pkmn,
+				id: parseInt(pkmn.url.split("/").slice(-2, -1)[0]),
+				favorite: false,
+			}));
+
 			return allPokemon.value;
 		} catch (error) {
 			console.error("Failed to fetch all pokemons:", error);
@@ -32,78 +46,78 @@ export const usePokemonStore = defineStore("pokemon", () => {
 		}
 	};
 
-	const filterPokemon = (pokemon) => {
-		const isNumber = !isNaN(pokemon.value.toLowerCase());
+	const filterPokemon = (searchValue) => {
+		const trimValue = searchValue.value.trim().toLowerCase();
 
-		console.log(
-			"filterPokemon2",
-			pokemon.value,
-			typeof pokemon.value,
-			isNumber
-		);
 		try {
-			if (isNumber) {
-				const index = Number(pokemon.value) - 1;
-				const isValidIndex = index >= 0 && index < allPokemon.value.length;
+			if (trimValue === "") {
+				return allPokemon.value;
+			}
 
-				if (isValidIndex) {
-					console.log(allPokemon.value[index]);
-					console.log(
-						"el de abajo",
-						(singlePokemon.value = allPokemon.value[index])
-					);
-					return (singlePokemon.value = allPokemon.value[index]);
+			const isNumber = !isNaN(trimValue);
+
+			if (isNumber) {
+				hasError.value = true;
+				return allPokemon.value;
+			} else {
+				const filteredPokemon = allPokemon.value.filter((pkmn) =>
+					pkmn.name.includes(trimValue)
+				);
+
+				if (filteredPokemon.length > 0) {
+					return filteredPokemon;
+				} else {
+					hasError.value = true;
+					return allPokemon.value;
 				}
-				return (hasError.value = true);
 			}
 		} catch (error) {
-			console.log("filterPokemonError", error);
+			console.error("filterPokemonError", error);
 		}
-		/* 		try {
-			const isNumber = !isNaN(pkmnValue.value.toLowerCase());
-			console.log(isNumber);
-			if (isNumber) {
-				const numericValue = Number(pkmnValue);
-				if (numericValue === 0 || isNumber === null || isNumber === undefined) {
-					pkmnValue = "";
-					return (hasError.value = true);
-				}
-				return allPokemon.value[numericValue - 1];
-			}
+	};
 
-			let pokemonName = pkmnValue.toLowerCase();
-			singlePokemon.value = copiedPokemon.find(
-				(pkmn) => pkmn.name === pokemonName
+	const addPkmnToFavorites = (pkmnId) => {
+		try {
+			const matchingPokemon = findPokemonById(pkmnId);
+
+			if (matchingPokemon) {
+				matchingPokemon.favorite = !matchingPokemon.favorite;
+				pokemonDetail.value.favorite = matchingPokemon.favorite;
+			} else {
+				console.error("Pokemon not found in the list");
+			}
+		} catch (error) {
+			console.error("Failed to add Pokemon to Favorites", error);
+		}
+	};
+
+	const getPokemonDetails = async (pkmn) => {
+		togglePokemonModal.value = true;
+
+		if (pokemonDetail.value.id === pkmn.id) {
+			return pokemonDetail.value;
+		}
+
+		try {
+			const { data } = await axios.get(
+				`https://pokeapi.co/api/v2/pokemon/${pkmn.id}`
 			);
+			console.log("data", data);
 
-			if (!singlePokemon.value) {
-				searchInputValue.value = "";
-				return (hasError.value = true);
+			const matchingPokemon = findPokemonById(pkmn.id);
+
+			if (matchingPokemon) {
+				pokemonDetail.value = {
+					...data,
+					favorite: matchingPokemon.favorite,
+				};
+				console.log("pokemonDetail", pokemonDetail.value);
+				return pokemonDetail.value;
+			} else {
+				console.error("Matching Pokemon not found");
 			}
-			searchedSinglePokemon.value = true;
-			return singlePokemon.value;
 		} catch (error) {
-			console.error("Failed to find a pokemon:", error);
-		} */
-	};
-
-	const addPkmnToFavorites = (pkmnIndex) => {
-		try {
-			allPokemon.value[pkmnIndex].favorite =
-				!allPokemon.value[pkmnIndex].favorite;
-		} catch (error) {
-			console.error("Failed to add pokemon to Favorites", error);
-		}
-	};
-
-	const getUniquePkmn = async (url) => {
-		try {
-			const { data } = await axios.get(url);
-			singlePokemon.value = data;
-			return singlePokemon.value;
-		} catch (error) {
-			console.error("Failed to fetch a specific pokemon:", error);
-			return (hasError.value = true);
+			console.error("Error fetching Pokemon details", error);
 		}
 	};
 
@@ -111,12 +125,12 @@ export const usePokemonStore = defineStore("pokemon", () => {
 		isLoading,
 		hasError,
 		allPokemon,
-		singlePokemon,
-		searchedSinglePokemon,
 		favoritesPokemon,
+		togglePokemonModal,
+		pokemonDetail,
 		getAllPokemon,
 		filterPokemon,
 		addPkmnToFavorites,
-		getUniquePkmn,
+		getPokemonDetails,
 	};
 });

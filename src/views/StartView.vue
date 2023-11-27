@@ -16,7 +16,12 @@
 			</p>
 		</article>
 		<article>
-			<Button @click="handleGetStarted"> Get started </Button>
+			<Button
+				activeBackground="bg-[#F22539] focus:bg-[#C00E20] active:bg-[#C00E20]"
+				@click="handleGetStarted"
+			>
+				Get started
+			</Button>
 		</article>
 	</section>
 </template>

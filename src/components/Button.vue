@@ -1,6 +1,6 @@
 <template>
 	<button
-		:class="`flex justify-center items-center min-w-[131px] max-h-[44px] px-[20px] py-[11px] gap-[10px] rounded-[60px] font-bold text-white ${props.activeBackground}`"
+		:class="`flex justify-center items-center ${props.activeWidth} max-h-[44px] xs2:w-full sm:max-w-[275px] px-[20px] py-[11px] gap-[10px] rounded-[60px] font-bold text-white ${props.activeBackground}`"
 		@click="handleRouter"
 	>
 		<slot />
@@ -13,6 +13,10 @@ const props = defineProps({
 	activeBackground: {
 		type: String,
 		default: "bg-red-500",
+	},
+	activeWidth: {
+		type: String,
+		default: "min-w-[131px]",
 	},
 	route: {
 		type: String,

@@ -1,8 +1,8 @@
 <template>
-	<div class="flex flex-col items-center gap-[10px] mt-[50px]">
+	<div class="flex flex-col items-center gap-[10px] mt-[20px]">
 		<h3 class="font-bold text-3xl">Uh-oh!</h3>
 		<p>You look lost on your journey!</p>
-		<Button route="home" class="mt-[25px]" @click="goBack">Go back home</Button>
+		<Button route="home" class="mt-[15px]" @click="goBack">Go back home</Button>
 	</div>
 </template>
 

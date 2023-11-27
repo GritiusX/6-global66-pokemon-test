@@ -7,7 +7,7 @@ import { createPinia } from "pinia";
 const pinia = createPinia();
 
 createApp(App)
+	.use(router)
 	.use(pinia)
 	.use(Vue3Toastify, { autoClose: 3000 })
-	.use(router)
 	.mount("#app");
