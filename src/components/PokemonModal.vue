@@ -60,7 +60,7 @@
 					</p>
 				</div>
 				<span class="w-full border-t"></span>
-				<div class="flex justify-between gap-4 mt-[10px]">
+				<div class="flex justify-between mt-[10px]">
 					<Button
 						activeBackground="bg-[#F22539] focus:bg-[#C00E20] active:bg-[#C00E20]"
 						@click="
