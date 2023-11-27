@@ -19,6 +19,7 @@
 					? 'bg-[#F22539] focus:bg-[#C00E20] active:bg-[#C00E20]'
 					: 'bg-[#BFBFBF]'
 			"
+			:disabled="favoritesPokemon.length === 0"
 		>
 			<Icon icon="mingcute:star-fill" color="white" width="28" height="28" />
 			Favorites
@@ -30,6 +31,10 @@
 import { useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import Button from "./Button.vue";
+import { usePokemonStore } from "../store/store";
+import { storeToRefs } from "pinia";
+const store = usePokemonStore();
+const { favoritesPokemon } = storeToRefs(store);
 const route = useRoute();
 </script>
 

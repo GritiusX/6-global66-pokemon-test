@@ -17,6 +17,7 @@ export default {
 			},
 			lineHeight: {
 				pokemon: "31.2px",
+				modal: "27px",
 				inputPlaceholder: "22.4px",
 			},
 			boxShadow: {
@@ -25,7 +26,7 @@ export default {
 		},
 		screens: {
 			xs: "375px",
-			xs2: "400px",
+			xs2: "376px",
 			sm: "640px",
 			md: "768px",
 			lg: "1024px",

@@ -6,7 +6,7 @@
 	>
 		<div
 			@click.stop
-			class="relative mx-auto rounded-lg top-1/4 w-[315px] bg-white z-20"
+			class="relative mx-auto rounded-lg top-[20%] min-w-[315px] xs:w-[315px] xs2:w-full xs2:max-w-[570px] bg-white z-20"
 		>
 			<div class="relative">
 				<Icon
@@ -34,15 +34,23 @@
 					/>
 				</div>
 			</div>
-			<div class="flex flex-col px-[30px] py-[20px] gap-[10px]">
-				<p class="capitalize">Name: {{ pokemonDetail.name }}</p>
+			<div
+				class="flex flex-col px-[30px] py-[20px] gap-[10px] modal-modal text-lg"
+			>
+				<p class="capitalize">
+					<span class="font-bold">Name:</span> {{ pokemonDetail.name }}
+				</p>
 				<span class="w-full border-t"></span>
-				<p class="capitalize">Weight: {{ pokemonDetail.weight }}</p>
+				<p class="capitalize">
+					<span class="font-bold">Weight:</span> {{ pokemonDetail.weight }}
+				</p>
 				<span class="w-full border-t"></span>
-				<p class="capitalize">Height: {{ pokemonDetail.height }}</p>
+				<p class="capitalize">
+					<span class="font-bold">Height:</span> {{ pokemonDetail.height }}
+				</p>
 				<span class="w-full border-t"></span>
 				<div class="flex">
-					<p>Types:&nbsp;</p>
+					<span class="font-bold">Types:&nbsp;</span>
 					<p
 						class="capitalize"
 						v-for="types in pokemonDetail.types"
@@ -52,7 +60,7 @@
 					</p>
 				</div>
 				<span class="w-full border-t"></span>
-				<div class="flex gap-4 mt-[10px]">
+				<div class="flex justify-between gap-4 mt-[10px]">
 					<Button
 						@click="
 							copy(
@@ -61,7 +69,7 @@
 									.join(' ')}`
 							)
 						"
-						class="bg-[#F22539] focus:bg-[#C00E20] active:bg-[#C00E20]"
+						class="!max-w-[195px]"
 					>
 						{{ copied ? "Pokemon copied!" : "Share to my friends" }}
 					</Button>

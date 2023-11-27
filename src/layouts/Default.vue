@@ -10,12 +10,12 @@
 			class="flex flex-col gap-[10px] mx-auto items-center px-4 pt-[35px] pb-24"
 		>
 			<RouterView />
-			<Navbar />
 		</section>
+		<Navbar v-if="route.name !== 'Start' && !isLoading" />
 	</section>
 </template>
 
-<script setup>
+<script lang="js" setup>
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import LoadingSpinner from "../components/LoadingSpinner.vue";

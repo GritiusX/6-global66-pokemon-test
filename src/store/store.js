@@ -102,7 +102,6 @@ export const usePokemonStore = defineStore("pokemon", () => {
 			const { data } = await axios.get(
 				`https://pokeapi.co/api/v2/pokemon/${pkmn.id}`
 			);
-			console.log("data", data);
 
 			const matchingPokemon = findPokemonById(pkmn.id);
 
@@ -111,7 +110,6 @@ export const usePokemonStore = defineStore("pokemon", () => {
 					...data,
 					favorite: matchingPokemon.favorite,
 				};
-				console.log("pokemonDetail", pokemonDetail.value);
 				return pokemonDetail.value;
 			} else {
 				console.error("Matching Pokemon not found");
