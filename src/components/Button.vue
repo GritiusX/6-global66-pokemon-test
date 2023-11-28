@@ -12,6 +12,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+const router = useRouter();
 const props = defineProps({
 	activeBackground: {
 		type: String,
@@ -26,7 +27,7 @@ const props = defineProps({
 		default: false,
 	},
 });
-const router = useRouter();
+
 const handleRouter = () => {
 	router.push(`/${props.route}`);
 };
